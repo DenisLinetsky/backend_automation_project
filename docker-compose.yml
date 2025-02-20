@@ -1,0 +1,10 @@
+version: '3'
+services:
+  orchestrator:
+    build: .
+    command: python orchestrator/orchestrator.py
+  worker:
+    build: .
+    command: python worker/worker.py
+    ports:
+      - "5001:5001"

@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build Docker images
+        run: |
+          docker-compose build
+
+      - name: Run Docker containers
+        run: |
+          docker-compose up -d
+
+      - name: Run tests
+        run: |
+          docker-compose run orchestrator pytest
+          docker-compose run worker pytest
+
+      - name: Tear down Docker containers
+        run: |
+          docker-compose down

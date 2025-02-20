@@ -1,0 +1,4 @@
+{
+  "daily_limit": "250 GB",
+  "accepted_data_formats": ["csv", "json"]
+}
